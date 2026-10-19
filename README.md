@@ -16,7 +16,7 @@ The games: a block puzzle, a mahjong game and a word search, all made with HTML5
 **As a skill (recommended).** Claude loads it only when the task is about a mobile game.
 ```bash
 # for all your projects
-git clone https://github.com/<owner>/claude-mobile-game-playbook
+git clone https://github.com/Ahmad1765/claude-mobile-game-playbook
 cp -r claude-mobile-game-playbook/skills/mobile-game-dev ~/.claude/skills/
 
 # or for one project only
