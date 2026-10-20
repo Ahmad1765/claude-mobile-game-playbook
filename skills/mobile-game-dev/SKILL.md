@@ -92,6 +92,8 @@ On a weak GPU, JavaScript was under 3% of CPU time; the lag was all painting and
 - **Prefer generators that are correct by construction, and test them anyway.** Reverse play (add each piece only where removing it is legal at that moment) makes every level solvable; the test still solves 1,000 levels and checks every piece's shape. While tuning, print generated levels as ASCII: fill, sizes and holes show at a glance.
 - **Prove the rules' safety properties before designing help.** In the arrow game, "any free arrow is always a safe move" meant hints, the tutorial and the fail message needed no solver at run time, and a player could never get stuck.
 - **Hand-written content needs written rules and a test.** In the word game: one category per word across the whole bank, no word that genuinely fits two categories (kiwi is a fruit *and* a bird), categories that overlap by nature never dealt together, everything spell-checked against a dictionary. Codes that players share are outside input: validate everything on decode.
+- **An SVG drawn as an image (on a canvas, as an `<img>`, or exported) needs `xmlns` and an intrinsic `width`/`height`.** Inline SVG needs neither, so it works on screen and fails silently on export.
+- **Text-to-speech in a WebView app needs a native plugin** (Android's WebView has no `speechSynthesis`). Check the installed voices and tell the player when one is missing.
 - **Plan for content updates after launch.** If puzzles are derived from content lists by shuffling, adding items reshuffles every existing puzzle. Use an order that stays stable when items are appended, and guard saved in-progress state against content that has changed under it.
 
 ## 7. Test like a player, on the device, after every change

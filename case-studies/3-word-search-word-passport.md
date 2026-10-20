@@ -2,6 +2,17 @@
 
 Game 02 of the portfolio (spec: `../games/02-word-trail.md`). A calm, travel-themed word search: 12 cities × 10 puzzles, a passport stamp and a postcard fact for each city, a daily puzzle, and bonus words that earn hints. Ads and other monetization are deliberately not built yet. Test device: Infinix X655C (Helio P22, Android 10, WebView 154, system font scale 1.15). Started 2026-10-20.
 
+
+## v2 (2026-10-20): collage (a travel scrapbook), say hello, a local word, postcards
+After the owner's feedback (root DEVLOG §5.16), restyled from scratch in a style from the owner's list and given three approved selling points.
+- **Style: Collage.** Kraft paper, torn-edged paper scraps at slight angles, washi tape, stamps with perforated (dotted) edges, tickets with notched sides (a CSS mask), a taped polaroid of the next city on home with a handwritten hello. Courier Prime (typewriter) for text and the grid's letters, Caveat (handwriting) for titles and notes (both OFL). The grid card is a torn scrap with two strips of tape, baked once per layout.
+- **A local word** (`local.js`): every puzzle also hides one word in the city's language (French SOLEIL, Japanese SAKURA, Aussie ARVO…), shown as "Also hidden: the French word for sun, 6 letters". It is placed like the listed words (so it reads in exactly one place), always last in `placed` so every index the game uses stays aligned, isn't needed to win, and fills two bonus-jar slots and is spoken aloud. 240 of 240 puzzles tested have one.
+- **Say hello:** each city card has Hello and Thank you buttons in the local language (Bonjour / Merci, Konnichiwa / Arigatou with the Japanese script…), spoken by the phone's text-to-speech through `@capacitor-community/text-to-speech` (MIT; Android's WebView has no speechSynthesis). On the test phone 9 of the 10 languages have a voice; Afrikaans doesn't, and the game says so.
+- **Postcards:** "Send a postcard" draws an airmail postcard (greeting, the city's fact, words found, the stamp and a postmark) on a canvas, writes it with `@capacitor/filesystem` and shares it with `@capacitor/share` (both official). The regression confirms the share sheet opens.
+- **Outside resources:** the three plugins above; Kenney CC0 sounds (page flips for finds, a book landing as the stamp's thump, a click, a soft miss); Fontsource fonts.
+- **Measured on the phone (v2):** idle 59.7 fps; four finds 400 ms apart 57.6 fps. Every screen fits at 1.3× text (after moving the hello note off the photo caption and fitting the half-width tickets). Regression 11/11, including a real swipe over the local word and the postcard's share sheet.
+- **Bugs found (v2):** hiding the local word from the list would have shifted every word index after it (`found[i]` assumes `placed[i]` is `words[i]`); fixed by putting it last. The postcard's stamp didn't draw: an SVG used as an image needs `xmlns` (inline SVG doesn't) and an intrinsic size. A comment pasted mid-line by a patch commented out the code after it, twice in this restyle round.
+
 ## Day-one decisions (Gemstack retrospective §5.1)
 | Decision | Value | Why |
 |---|---|---|
