@@ -97,6 +97,12 @@ On a weak GPU, JavaScript was under 3% of CPU time; the lag was all painting and
 - **Show progress as a picture that grows** (a pond, a garden, a shopfront) rather than a number, and cap its catch-up animation so a long absence never means a long wait.
 - **Make an accessibility mode one tap away** (a HUD button, not only a setting): bigger tiles, high contrast, colour per suit and free match highlighting sell to players other games leave behind.
 - **A debug build won't install over a release-signed copy** (`INSTALL_FAILED_UPDATE_INCOMPATIBLE`); uninstalling first clears that phone's save.
+- **Trial an outside library against the feature before building on it**: time it on the target, check its coverage on your own inputs, and check its output carries what the feature needs. Record why one was rejected.
+- **For logic puzzles, a solver that uses only sound human techniques** grades difficulty, proves a unique answer when it finishes, and yields explainable hints. Ship only puzzles it finishes; test soundness by replaying every step against the answer.
+- **Turn solver steps into hints a person can follow**: merge runs of the same idea, summarise long chains, cap the length and test the cap.
+- **Precompute in a shipped pack when on-device work at a screen's opening passes about 50 ms.**
+- **Store screenshots from `adb screencap` include the status bar and its notification icons**: crop the system bars off.
+- **Museum open-access APIs (for example the Met's) are a rich source of public-domain art.** If a server answers scripts with a bot check, use another source rather than working around it.
 - **Plan for content updates after launch.** If puzzles are derived from content lists by shuffling, adding items reshuffles every existing puzzle. Use an order that stays stable when items are appended, and guard saved in-progress state against content that has changed under it.
 
 ## 7. Test like a player, on the device, after every change
