@@ -64,6 +64,7 @@ Spec: `games/07-sudoku-calm.md`. Engine copied from `wordparlour/` (Android proj
 - **The store screenshots showed the phone's status bar with notification icons** (`adb screencap` captures the whole screen). Cropped to 720×1424 (system bars off, within Play's 2:1 limit).
 - **Registering the SystemBars plugin twice** printed a warning; Capacitor already registers it, so the app uses `Capacitor.Plugins.SystemBars`.
 - **ImageMagick's `PNG8:` prefix stopped Git Bash converting `/d/...`** to a Windows path; use `D:/...` after a format prefix.
+- **Word Parlour's `logic.js` was copied with the engine and never removed**: unreferenced, importing a file that no longer exists, and packed into the APK. Found while starting game 08; deleted. After copying an engine, list every module nothing imports.
 - **10 empty stray files** again (the `cmd` redirect hook, §5.10). Deleted.
 
 ## Commands

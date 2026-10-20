@@ -103,6 +103,12 @@ On a weak GPU, JavaScript was under 3% of CPU time; the lag was all painting and
 - **Precompute in a shipped pack when on-device work at a screen's opening passes about 50 ms.**
 - **Store screenshots from `adb screencap` include the status bar and its notification icons**: crop the system bars off.
 - **Museum open-access APIs (for example the Met's) are a rich source of public-domain art.** If a server answers scripts with a bot check, use another source rather than working around it.
+- **For shortest-solution searches, use A* with a cheap admissible bound**, not breadth-first search; re-solve a sample in the tests to keep par provably optimal.
+- **Reject impossible pieces when generating** (check each piece alone on the empty board) instead of discovering unsolvable levels at solve time.
+- **Seed offline builds per item** so they can run on every core and still give the same file.
+- **Lay out decorative compositions in proportions of their box, keep text in the flow, and never leave vertical text in the flow.**
+- **Crop store screenshots by the measured system-bar insets**, not a fixed amount: some apps hide the navigation bar.
+- **After copying an engine, list the modules nothing imports and delete them.**
 - **Plan for content updates after launch.** If puzzles are derived from content lists by shuffling, adding items reshuffles every existing puzzle. Use an order that stays stable when items are appended, and guard saved in-progress state against content that has changed under it.
 
 ## 7. Test like a player, on the device, after every change
