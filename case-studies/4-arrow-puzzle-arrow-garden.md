@@ -2,6 +2,16 @@
 
 Game 03 of the portfolio (spec: `../games/03-arrow-out.md`). An arrow "tap away" puzzle: every arrow is a path of cells, tapping slides it out head first along its own path, and it bumps if anything sits between its point and the edge. Every 10 levels a flower bed blooms (a flower card with a short fact), picture boards every 5th level, a daily puzzle, 3 hearts, hints. Ads and other monetization are deliberately not built yet. Test device: Infinix X655C (Helio P22, Android 10, WebView 154, system font scale 1.15). Started and reached a playable, device-tested v1 on 2026-10-20.
 
+## v2 (2026-10-20): claymorphism, living seasons, watering, free misreads
+After the owner's feedback (root DEVLOG §5.16), restyled from scratch and given three approved selling points.
+- **Style: claymorphism.** Soft, puffy, matte clay pieces: an inner highlight at the top-left, an inner rim at the bottom-right and a soft drop shadow, all static (no animated blur). Pill buttons, round icon buttons, Fredoka (OFL) type. On the board, every arrow is a clay tube (a shadow below, the body, a highlight along the top) and every cell a dimple, all drawn only when the board changes.
+- **Living seasons.** `seasons.js` picks the season from the date (northern-hemisphere months for now): the page and card colours, the home scene (blossom, sun, falling leaves, snow) and the win particles (petals, sparks, leaves, snowflakes) all change with it.
+- **Water your garden.** The home scene shows one clay flower per finished bed; they droop after 2 days without play and wilt after 4 (calendar days), with a line saying so. Any finished level waters the whole garden ("Your thirsty garden has been watered"). Plants never die.
+- **Free misreads.** Press and hold an arrow (320 ms) to see where it would go: green dots to the edge, or red up to the blocker, with the blocking arrow outlined. Lifting moves nothing; a quick tap still sends the arrow (on lift now, not on touch). The tutorial and the "Out of hearts" card mention it.
+- **Outside resources:** Kenney "UI Audio" and "Impact Sounds" (CC0): a click, a soft roll for arrows leaving, soft clay thuds for bumps, a water splash. The climbing pentatonic notes stay (they are the game's signature). Fredoka via Fontsource.
+- **Measured on the phone (v2):** idle 60 fps; arrows leaving 59.3 fps (worst frame 33 ms); a preview 58.6 fps. Every screen fits at 1.3× text. Regression 11/11 (a real long press previews and moves nothing; a thirsty garden is watered by a win).
+- **Found and fixed (v2):** the home scene was letterboxed with pale bands (fixed with a taller drawing on a sky-coloured box; `slice` cropped flowers off the sides on tall boxes). The regression's long press first checked too early: adb's touch lands about 0.9 s after the command, so the test now waits for the preview to appear.
+
 ## Day-one decisions (Gemstack retrospective §5.1)
 | Decision | Value | Why |
 |---|---|---|
@@ -68,7 +78,7 @@ Cell size on the phone: 72 px on level 1 (capped), 36 px on the 9-column boards.
 - **Copying the last game whole, again.** The Android build succeeded on the first try; only the package id, names and art had to change outside the game code. Game 04 should copy this folder.
 - **A generator that is correct by construction, then tested anyway.** Reverse play makes every board solvable; the test still solves 1,000 levels and 400 dailies and checks every path (connected, head in line, never in its own way).
 - **Prove the rules are safe before designing hints:** "any free arrow is a safe move" meant hints, the tutorial and the fail message needed no solver at run time.
-- **Printing boards as ASCII** (a throwaway script) made generator tuning fast: fill, length and holes are visible at a glance without a browser.
+- **Printing boards as ASCII** (`peek.mjs` in the scratchpad) made generator tuning fast: fill, length and holes are visible at a glance without a browser.
 
 **What to watch for**
 - **The name check is the first task, not a formality.** The spec's name was taken four times over, plus two of my first alternatives.
