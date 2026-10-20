@@ -109,6 +109,10 @@ On a weak GPU, JavaScript was under 3% of CPU time; the lag was all painting and
 - **Lay out decorative compositions in proportions of their box, keep text in the flow, and never leave vertical text in the flow.**
 - **Crop store screenshots by the measured system-bar insets**, not a fixed amount: some apps hide the navigation bar.
 - **After copying an engine, list the modules nothing imports and delete them.**
+- **Start each game as a fresh project and take only ideas from earlier ones.** Copying a previous game's folder, even just the engine, carries dead code and makes games look alike.
+- **Look for state that follows from the rest** (in a bus sort, the street follows from who has left), and keep an explicit event version for the screen, tested to agree.
+- **Tie queued animations to the game that queued them**, and act on captured elements, not later lookups. Run the regression several times in a row to catch races.
+- **Cancel an element's old animations before placing it again**: WAAPI `fill: 'forwards'` keeps the end frame.
 - **Plan for content updates after launch.** If puzzles are derived from content lists by shuffling, adding items reshuffles every existing puzzle. Use an order that stays stable when items are appended, and guard saved in-progress state against content that has changed under it.
 
 ## 7. Test like a player, on the device, after every change
