@@ -113,6 +113,11 @@ On a weak GPU, JavaScript was under 3% of CPU time; the lag was all painting and
 - **Look for state that follows from the rest** (in a bus sort, the street follows from who has left), and keep an explicit event version for the screen, tested to agree.
 - **Tie queued animations to the game that queued them**, and act on captured elements, not later lookups. Run the regression several times in a row to catch races.
 - **Cancel an element's old animations before placing it again**: WAAPI `fill: 'forwards'` keeps the end frame.
+- **Put static gradient backgrounds on their own layer** (`transform: translateZ(0)`) on low-end GPUs: anything moving over them re-rasters them otherwise.
+- **When frames are slow but the main thread is quiet, record a Chrome trace over DevTools** and total the time per thread and event: it shows GPU raster that no amount of JS tuning will fix.
+- **Generators that are solvable by construction need a proven invariant** (bound the worst case of finishing what is open, not just the current load); ship the construction order and replay it in the tests.
+- **Measure difficulty with a reasonable player**, not a random one: a player that never plans measures nothing on harder content.
+- **Never let a press-and-hold gesture swallow a slow tap** where the gesture doesn't apply.
 - **Plan for content updates after launch.** If puzzles are derived from content lists by shuffling, adding items reshuffles every existing puzzle. Use an order that stays stable when items are appended, and guard saved in-progress state against content that has changed under it.
 
 ## 7. Test like a player, on the device, after every change
