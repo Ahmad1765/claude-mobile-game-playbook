@@ -2,6 +2,14 @@
 
 Game 04 of the portfolio (spec: `../games/04-pixel-parade.md`). A conveyor "colour shooter" in the style of Pixel Flow: a pixel picture sits inside a belt; shooters ride the belt and fire at tiles of their own colour; pick the order, don't jam the belt. Every finished picture goes into an album (10 per page), hard levels every 5th from 15, a daily picture, an "extra slot" booster. Ads and other monetization are deliberately not built yet. Test device: Infinix X655C (Helio P22, Android 10, system font scale 1.15). Started 2026-10-20; desktop-playable and device-tested v1 the same day (regression 9/9, 60 fps).
 
+## v2 (2026-10-20): pixel art / retro arcade, and draw your own
+After the owner's feedback (root DEVLOG §5.16), restyled from scratch and given the approved selling point.
+- **Style: pixel art / retro arcade.** A dark CRT screen with faint static scanlines, neon cyan/pink/yellow/green, stepped pixel corners from the four-shadow trick, hard pixel drop shadows, an arcade "attract" home with a select menu, square bevelled shooter tokens, a black belt with a cyan dashed track on a dark board. Pixelify Sans for text, Press Start 2P for the title (OFL). Icons got square caps.
+- **Draw your own** (the selling point). A 16×16 editor (14 palette colours, at most 6 per picture so every drawing is a legal level); "Play it" builds a friendly level from the drawing (3 queues, 5 slots); "Send to a friend" shares an `MP1.` code through the share sheet; "Code" plays a friend's code. Codes are validated in full on decode. A drawn level earns no stars and doesn't touch progress. The test builds and solves 100 random drawings.
+- **Outside resources:** Kenney "Digital Audio" (CC0), cut short with ffmpeg (the originals are 0.3–1.1 s; shots fire many times a second, so `shot.ogg` is 0.09 s); Pixelify Sans and Press Start 2P via Fontsource; `@capacitor/share`.
+- **Measured on the phone (v2):** idle 60 fps; 4 shooters on the belt 60 fps, 0% late. Every screen fits at 1.3× text. Regression 10/10 (a real tap paints a cell; a drawing plays; a bad code is refused).
+- **Bug found (v2):** the boot still waited for Nunito, the font removed in the restyle (the Word Parlour bug again; Shopkeeper Trio had it too and was fixed at the same time).
+
 ## Day-one decisions (Gemstack retrospective §5.1)
 | Decision | Value | Why |
 |---|---|---|
