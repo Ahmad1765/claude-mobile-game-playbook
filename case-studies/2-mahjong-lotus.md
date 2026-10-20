@@ -2,6 +2,17 @@
 
 Game 01 of the portfolio (`../games/01-lotus-mahjong.md`). It's a calm mahjong pair-matching game for players aged 45 and over. Ads and other monetization are deliberately not built yet. Test device: Infinix X655C (Helio P22, Android 10, WebView 154, **system font scale 1.15**).
 
+
+## v2 (2026-10-20): Japandi & wabi-sabi, the lotus pond, clear-view tiles, a breathing break
+After the owner's feedback (root DEVLOG §5.16), restyled from scratch in a style from the owner's list and given three approved selling points.
+- **Style: Japandi & wabi-sabi.** Washi paper, sumi ink, oak and clay; flat paper with hairline edges, no shadows on the UI, square-ish corners, a left-aligned title with a small clay seal, a home menu of plain ruled lines. Imperfection on purpose: a brushed ensō, a pond that isn't an oval. Tiles are oak-backed bone with muted clay, moss and indigo ink. Shippori Mincho for titles, Zen Kaku Gothic New for text (Fontsource, OFL). Store art: the lotus tile inside the ensō.
+- **The lotus pond** (`pond.js`): home shows a pond with one lotus leaf per board cleared (`stats.wins`); every third leaf flowers, and once the pond holds 48 leaves one more flowers per board. Leaves you haven't seen yet grow in (at most the last 8, so it never drags). The win card says "A lotus opened in your pond".
+- **Clear-view tiles:** an eye button in the HUD (and a setting). Tiles get as big as the screen allows (padding 4, cap 140 instead of 88), each suit gets its own pale face colour, outlines go dark, corner numbers turn on, blocked tiles fade far back, and with a tile selected every free tile it can match is outlined, free (no star cost). Clearing a level in clear view still earns 3 stars.
+- **A breathing break** (`breath.js`): "One-minute breath" on the win card and in the pause menu. In for 4 seconds, out for 6, six times; the ensō scales (compositor only), a small synthesized singing bowl sounds at each breath in, a light haptic marks each turn. Android back ends it and its timers.
+- **Outside resources:** Kenney "Casino Audio" (CC0) chip clacks for tiles and a card shuffle trimmed to 1 s; Fontsource fonts. Nunito removed.
+- **Measured on the phone (v2):** idle 60 fps; four matches 450 ms apart 59.5 fps; the breathing ensō 60 fps. Every screen fits at 1.3× text (one button label shortened to "One-minute breath"). Regression 9/9, including a real tap in clear view.
+- **Notes:** the phone had a release-signed copy, so the debug build would not install over it (`INSTALL_FAILED_UPDATE_INCOMPATIBLE`); uninstalling cleared the test save. Store screenshots retaken in the new style.
+
 ## Rule: build on what already exists, never start from scratch
 Before writing anything new, check what is already available and reuse it. That saves time, and the reused parts are already tested on the device:
 1. **This repo first.** Gemstack's kit (`../www/`: store, fx/sound, dom helpers, icons pattern, ads wrapper, back button, notifications) and the tools here (`tools/device.mjs`, `regress.mjs`, `sim.mjs`, `shot.mjs`). Copy and trim instead of rewriting.
@@ -94,7 +105,7 @@ Simulated dead-end rate (needs a shuffle). Levels 1–10: 0% for both a random a
 - **Package id is final: `app.lotusmahjong.game`.** Reverse-domain of lotusmahjong.app, which was unregistered at the time (lotusmahjong.com is someone else's store). Free on Play; no exact "Lotus Mahjong" title exists there, only "Mahjong Lotus Solitaire" (pm4), so the listing title is "Lotus Mahjong: Big Tiles". A per-game namespace keeps each game separable if one is ever sold.
 - **Upload key:** `android/lotus-upload.jks` with its random password in `android/keystore.properties` (both gitignored). **Back up both off this machine.** Enrol in Play App Signing, so a lost upload key can be reset through Google.
 - `tools/release.mjs` strips `__dbg` and `sheet.html` from the packaged copy only, so debug APKs still work with `regress.mjs`. It fails loudly if the `__dbg` block moves.
-- Store listing, privacy policy and Play Console answers: `store/listing.md`, `store/privacy.html` (hosted as a static page on the author's site), `store/feature-1024x500.png`, `store/screens/`.
+- Store listing, privacy policy and Play Console answers: `store/listing.md`, `store/privacy.html` (hosted at https://omitt.me/app-policies/lotus-mahjong/privacy.html from the GitHub repo Ahmad1765/app-policies), `store/feature-1024x500.png`, `store/screens/`.
 - **Verified on the phone (2026-10-19):** the debug build with the new id passes `regress.mjs`. The signed release APK (built from the same stripped assets as the AAB, without the DEBUGGABLE flag) installs, starts full screen, runs the level 1 tutorial and matches a pair, with no crashes in logcat. The first install of a newly signed APK hung for about 3 minutes, which was Play Protect scanning it with no prompt on screen. adb isn't on the PATH: use `%LOCALAPPDATA%/Android/Sdk/platform-tools/adb.exe`, as `tools/device.mjs` does.
 
 ## Not done yet (by decision)

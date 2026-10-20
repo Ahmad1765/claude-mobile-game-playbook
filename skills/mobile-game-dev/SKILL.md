@@ -94,6 +94,9 @@ On a weak GPU, JavaScript was under 3% of CPU time; the lag was all painting and
 - **Hand-written content needs written rules and a test.** In the word game: one category per word across the whole bank, no word that genuinely fits two categories (kiwi is a fruit *and* a bird), categories that overlap by nature never dealt together, everything spell-checked against a dictionary. Codes that players share are outside input: validate everything on decode.
 - **An SVG drawn as an image (on a canvas, as an `<img>`, or exported) needs `xmlns` and an intrinsic `width`/`height`.** Inline SVG needs neither, so it works on screen and fails silently on export.
 - **Text-to-speech in a WebView app needs a native plugin** (Android's WebView has no `speechSynthesis`). Check the installed voices and tell the player when one is missing.
+- **Show progress as a picture that grows** (a pond, a garden, a shopfront) rather than a number, and cap its catch-up animation so a long absence never means a long wait.
+- **Make an accessibility mode one tap away** (a HUD button, not only a setting): bigger tiles, high contrast, colour per suit and free match highlighting sell to players other games leave behind.
+- **A debug build won't install over a release-signed copy** (`INSTALL_FAILED_UPDATE_INCOMPATIBLE`); uninstalling first clears that phone's save.
 - **Plan for content updates after launch.** If puzzles are derived from content lists by shuffling, adding items reshuffles every existing puzzle. Use an order that stays stable when items are appended, and guard saved in-progress state against content that has changed under it.
 
 ## 7. Test like a player, on the device, after every change
