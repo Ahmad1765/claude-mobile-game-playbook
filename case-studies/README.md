@@ -10,3 +10,4 @@ The development logs the rules in `../skills/mobile-game-dev/SKILL.md` were draw
 | [4-arrow-puzzle-arrow-garden.md](4-arrow-puzzle-arrow-garden.md) | Arrow tap-away puzzle | Solvable-by-construction generator, name collisions, confounded fps measurement |
 | [5-color-shooter-mosaic-parade.md](5-color-shooter-mosaic-parade.md) | Conveyor colour shooter | A shared simulation for game, solver and tests; balancing with a random player; DOM tokens at 60 fps |
 | [6-goods-sort-shopkeeper-trio.md](6-goods-sort-shopkeeper-trio.md) | Goods triple-sort | Proving the never-stuck rule; a DOM board patched per cell; SVG images vs PNG on a weak GPU |
+| [7-word-solitaire-word-parlour.md](7-word-solitaire-word-parlour.md) | Word association solitaire | The owner's "too similar, too AI-made" verdict and the fix: a named style per game, outside CC0 resources, an approved selling point; content rules; em vs text zoom |

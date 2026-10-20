@@ -5,7 +5,7 @@ description: Rules for building casual mobile games (especially HTML5/Canvas in 
 
 # Mobile game development playbook
 
-These rules come from building six casual games for Android with Claude Code (a block puzzle, a mahjong game, a word search, an arrow "tap away" puzzle, a conveyor colour shooter and a goods triple-sort), all tested on a low-end phone (MediaTek Helio P22, 4 GB RAM, Android 10). Each rule is here because breaking it cost a rewrite, a bug or a lost day. The case studies in this repo have the measurements behind them.
+These rules come from building seven casual games for Android with Claude Code (a block puzzle, a mahjong game, a word search, an arrow "tap away" puzzle, a conveyor colour shooter, a goods triple-sort and a word solitaire), all tested on a low-end phone (MediaTek Helio P22, 4 GB RAM, Android 10). Each rule is here because breaking it cost a rewrite, a bug or a lost day. The case studies in this repo have the measurements behind them.
 
 Follow them in order. When a rule doesn't fit the project, say so and why, rather than skipping it silently.
 
@@ -25,15 +25,21 @@ Never start a game or feature from scratch. In order:
 2. What the platform and installed libraries already provide (Capacitor plugins, system fonts packages, ImageMagick, Playwright's browser).
 3. Only then new code, as little as possible, for the part that is missing or broken. When a reused part misbehaves, replace only that part.
 
-At the start of each new game, list which files and tools it reuses before writing anything. In the third game, copying the second one meant the Android setup, saves, sound and device tools worked on the first build, and nearly all new work was the game itself. It worked again in the fourth, fifth and sixth games.
+At the start of each new game, list which files and tools it reuses before writing anything. **Reuse the engine, never the look** (see section 3).
+
+Look outside the project too, before drawing, synthesizing or writing content by hand: CC0/MIT assets, sounds, fonts and data (Kenney, OpenGameArt, Fontsource/Google Fonts, dariusk/corpora, official Capacitor plugins). Check each licence in its own file, and record what was used in the DEVLOG and in the game's credits. Real CC0 card sounds replaced synthesized beeps in minutes. In the third game, copying the second one meant the Android setup, saves, sound and device tools worked on the first build, and nearly all new work was the game itself. It worked again in the fourth, fifth and sixth games.
 
 ## 3. Design system before screens
+
+- **Give every game its own named design style, chosen before any UI is written** (minimalism, skeuomorphism, claymorphism, pixel art, neo-brutalism, Art Deco, Swiss, Memphis, Bauhaus, paper cut-out…), and write its page from scratch in that style: typeface, palette, shapes, HUD, home layout, textures. After five games copied from each other, the owner's verdict was "way too similar to each other" and "way too ai generated". The tells were one font everywhere, cream rounded cards with soft shadows, the same pause-title-badge header and the same hero-plus-stacked-buttons home. Avoid glassmorphism and soft-gradient cards.
+- **Every game needs a selling point no rival has** (in the word solitaire: a note on why each group fits, deals written for a friend, a shareable daily grid). Propose it to the owner, get it approved before building, and lead the store listing with it.
 
 - **Art direction, colour tokens, an icon set and a small component kit (buttons, cards, modals, rows) come first.** Every screen is then assembled from the kit. The first game shipped about 15 screens built ad hoc and had to rewrite every one.
 - **No emoji in the UI, ever.** They are fonts that differ by Android version and phone maker (a calendar emoji showed a date, a coin looked like a bank). Use an inline SVG icon set.
 - **Design for the short screen first** (about 360×620 CSS px once a banner ad is there), not a tall desktop viewport.
 - **Check the phone's system text size at 1.15× and 1.3×** before calling any screen done. WebView scales CSS text with it (canvas text is not scaled), so lists grow, titles wrap and the game area shrinks. This found layout bugs in both of the last two games that desktop testing never showed.
 - **Messages and banners must not resize the play area.** Show helper text as an overlay; a message that pushes the board up makes it jump under the player's finger.
+- **When JS shrinks text to fit, set the size in `em`, not px.** Android WebView's text zoom scales px sizes again (15.8px became 20.5px at 1.3×), so the shrink undoes itself. Wait for the fonts you actually use before measuring, and measure again on `document.fonts.ready`.
 - **Preview art at the size it will really be seen,** and against what will be behind it, every time the art changes. An icon detail that reads at 1024 px can hide a letter at 48 px; a navy stamp disappears on a navy cover; a white flower vanished on a cream card at launcher size.
 - **Keep the in-game title to one short item.** Compound titles ("Level 30 · Sunflower bed") truncated at 1.3× text in two games.
 - **In a colour-matching game, never fade a colour to mean "inactive" or "next".** A half-transparent brown token read as beige, which was a real colour in the game. Make inactive items smaller instead.
@@ -79,12 +85,15 @@ On a weak GPU, JavaScript was under 3% of CPU time; the lag was all painting and
 - **Validate generated content automatically.** For procedural levels: thousands of seeds, each checked for solvability and fairness (every level solvable; every hidden word readable in exactly one place; no offensive words in random filler). For written content: spell-check every word against a dictionary and fail on typos. A spell-check of 2,290 hand-written words caught 8.
 - **Prefer generators that are correct by construction, and test them anyway.** Reverse play (add each piece only where removing it is legal at that moment) makes every level solvable; the test still solves 1,000 levels and checks every piece's shape. While tuning, print generated levels as ASCII: fill, sizes and holes show at a glance.
 - **Prove the rules' safety properties before designing help.** In the arrow game, "any free arrow is always a safe move" meant hints, the tutorial and the fail message needed no solver at run time, and a player could never get stuck.
+- **Hand-written content needs written rules and a test.** In the word game: one category per word across the whole bank, no word that genuinely fits two categories (kiwi is a fruit *and* a bird), categories that overlap by nature never dealt together, everything spell-checked against a dictionary. Codes that players share are outside input: validate everything on decode.
 - **Plan for content updates after launch.** If puzzles are derived from content lists by shuffling, adding items reshuffles every existing puzzle. Use an order that stays stable when items are appended, and guard saved in-progress state against content that has changed under it.
 
 ## 7. Test like a player, on the device, after every change
 
 - **Keep an on-device regression script** and run it after every change: it drives the running app over CDP, uses real touch input where it matters (`adb shell input swipe/tap` at coordinates from the engine's own geometry), and asserts game state.
 - **If the phone isn't available, write the device regression anyway, plus a desktop smoke script that drives every flow and reports page errors.** The smoke script caught one crash; the regression caught two more bugs within minutes of the phone being connected.
+- **Anything a re-render rebuilds must be re-applied by the render itself.** A tutorial highlight vanished on the phone when a `ResizeObserver` re-render fired after the first layout; desktop timing hid it.
+- **Never take screenshots with a share sheet open**: it shows the owner's contacts.
 - **Fail the run on any page error,** not only on failed assertions. That check caught a crash manual play would almost never hit.
 - **Relaunch the way a person leaves:** press Home, then kill the process. On Android WebView, `localStorage` written less than about 1 second before a hard kill in the foreground can be lost; going to the background flushes it.
 - **Write down where every wait in a test comes from** ("700 ms celebration + 1300 ms petals"). A guessed wait of 1.9 s for a card that opens at 2.0 s made a correct game look broken.

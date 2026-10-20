@@ -4,7 +4,7 @@
 
 A Claude Code skill for building casual mobile games that run smoothly on cheap Android phones.
 
-Every rule here comes from shipping real games with Claude Code: a block puzzle, a mahjong game, a word search, an arrow puzzle, a conveyor colour shooter and a goods triple-sort. All six are HTML5 (Canvas or DOM) in a Capacitor WebView, all measured on a low-end phone (MediaTek Helio P22, 4 GB RAM, Android 10). Each rule exists because breaking it cost a rewrite, a bug or a lost day. The [case studies](case-studies/) have the measurements behind every one.
+Every rule here comes from shipping real games with Claude Code: a block puzzle, a mahjong game, a word search, an arrow puzzle, a conveyor colour shooter, a goods triple-sort and a word solitaire. All seven are HTML5 (Canvas or DOM) in a Capacitor WebView, all measured on a low-end phone (MediaTek Helio P22, 4 GB RAM, Android 10). Each rule exists because breaking it cost a rewrite, a bug or a lost day. The [case studies](case-studies/) have the measurements behind every one.
 
 ## Install
 
@@ -35,12 +35,13 @@ This skill lists the mistakes we actually hit, what they cost, and the fix:
 - **A white flower on the app icon vanished at launcher size.**
 - **The game name had already been taken four times over.** Found on day one, so nothing had to be redone.
 - **Every level passed the solvability test, and a random player still won 99% of them.** The fix was in the content, not the difficulty knobs.
+- **Five games in, the owner said they all looked alike and "AI generated".** Now every game gets a named design style, CC0 assets and an approved selling point.
 
 ## Reference
 
 - **[mobile-game-dev](./skills/mobile-game-dev/SKILL.md)** — The skill. Day-one decisions, reuse, design system, Canvas-in-WebView rendering rules, measuring on a real phone, architecture, on-device testing, scope, and working habits for Claude Code.
 - **[device.mjs](./tools/device.mjs)** — Attach to your game's WebView on a USB phone: run JS, measure the frame rate during an action, list errors, take screenshots.
-- **[Case studies](./case-studies/)** — The six development logs the rules come from, with the measurements and the bugs found, and how each was found.
+- **[Case studies](./case-studies/)** — The seven development logs the rules come from, with the measurements and the bugs found, and how each was found.
 
 ### Measure on the phone, not the desktop
 
@@ -62,6 +63,7 @@ You need adb, USB debugging on the phone, and a debug build (Capacitor debug bui
 | 4 | [Arrow Garden](case-studies/4-arrow-puzzle-arrow-garden.md) | Arrow tap-away | A level generator that is correct by construction; name collisions; confounded measurements |
 | 5 | [Mosaic Parade](case-studies/5-color-shooter-mosaic-parade.md) | Conveyor colour shooter | One simulation shared by the game, solver and tests; measuring difficulty with a random player; continuous motion at 60 fps |
 | 6 | [Shopkeeper Trio](case-studies/6-goods-sort-shopkeeper-trio.md) | Goods triple-sort | Proving exactly when a position is dead; a DOM board patched per cell; SVG images cost 67–100 ms frames until rasterised |
+| 7 | [Word Parlour](case-studies/7-word-solitaire-word-parlour.md) | Word solitaire | A named design style (Art Deco), CC0 sounds and three selling points after the owner's "too AI-made" verdict; content rules; em vs text zoom |
 
 ## The ten rules that mattered most
 
