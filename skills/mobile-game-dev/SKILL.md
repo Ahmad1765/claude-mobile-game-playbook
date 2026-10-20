@@ -5,13 +5,13 @@ description: Rules for building casual mobile games (especially HTML5/Canvas in 
 
 # Mobile game development playbook
 
-These rules come from building five casual games for Android with Claude Code (a block puzzle, a mahjong game, a word search, an arrow "tap away" puzzle and a conveyor colour shooter), all tested on a low-end phone (MediaTek Helio P22, 4 GB RAM, Android 10). Each rule is here because breaking it cost a rewrite, a bug or a lost day. The case studies in this repo have the measurements behind them.
+These rules come from building six casual games for Android with Claude Code (a block puzzle, a mahjong game, a word search, an arrow "tap away" puzzle, a conveyor colour shooter and a goods triple-sort), all tested on a low-end phone (MediaTek Helio P22, 4 GB RAM, Android 10). Each rule is here because breaking it cost a rewrite, a bug or a lost day. The case studies in this repo have the measurements behind them.
 
 Follow them in order. When a rule doesn't fit the project, say so and why, rather than skipping it silently.
 
 ## 1. Day one: decide the permanent things before writing code
 
-- **Check the name in the stores first.** Search Google Play and the App Store for the exact title and close variants. One planned title ("Word Trail") was already used by two apps; finding that after the icon, listing and package id exist means redoing all three. Another ("Arrow Out") was taken four times over, and so were two of the first alternatives: search each alternative too, then let the owner choose among the free ones. The planned title was taken in three games running. Never use a competitor's trademark.
+- **Check the name in the stores first.** Search Google Play and the App Store for the exact title and close variants. One planned title ("Word Trail") was already used by two apps; finding that after the icon, listing and package id exist means redoing all three. Another ("Arrow Out") was taken four times over, and so were two of the first alternatives: search each alternative too, then let the owner choose among the free ones. The planned title was taken in four games running. Never use a competitor's trademark.
 - **Fix the package id / bundle id now.** It can never change after the first upload. Use one namespace per game (`app.<gamename>.game`) so a game can be sold or moved on its own.
 - **Create the signing (upload) key now, one per game,** keep it and its passwords out of version control, and tell the user to back both up off the machine. Enrol in Play App Signing.
 - **Pick the weakest phone you will support and set a performance budget,** for example: 60 fps idle and at least 55 fps during effects on a Helio P22-class phone. "It runs" is not the bar; "it runs smoothly on the weak phone" is.
@@ -25,7 +25,7 @@ Never start a game or feature from scratch. In order:
 2. What the platform and installed libraries already provide (Capacitor plugins, system fonts packages, ImageMagick, Playwright's browser).
 3. Only then new code, as little as possible, for the part that is missing or broken. When a reused part misbehaves, replace only that part.
 
-At the start of each new game, list which files and tools it reuses before writing anything. In the third game, copying the second one meant the Android setup, saves, sound and device tools worked on the first build, and nearly all new work was the game itself. It worked again in the fourth and fifth games.
+At the start of each new game, list which files and tools it reuses before writing anything. In the third game, copying the second one meant the Android setup, saves, sound and device tools worked on the first build, and nearly all new work was the game itself. It worked again in the fourth, fifth and sixth games.
 
 ## 3. Design system before screens
 
@@ -37,6 +37,8 @@ At the start of each new game, list which files and tools it reuses before writi
 - **Preview art at the size it will really be seen,** and against what will be behind it, every time the art changes. An icon detail that reads at 1024 px can hide a letter at 48 px; a navy stamp disappears on a navy cover; a white flower vanished on a cream card at launcher size.
 - **Keep the in-game title to one short item.** Compound titles ("Level 30 · Sunflower bed") truncated at 1.3× text in two games.
 - **In a colour-matching game, never fade a colour to mean "inactive" or "next".** A half-transparent brown token read as beige, which was a real colour in the game. Make inactive items smaller instead.
+- **Lay out for the item size first.** Three shelves per row left 30 px items on a 360 px phone; two per row gave 52 px and still fit nine shelves on a short screen.
+- **Icons sit inside their box with margins.** When composing store art, size the box so the visible art is the size you want (a donut that fills 65% of its box came out a fifth of the shelf). Give SVGs an intrinsic `width`/`height`, or canvas `drawImage` uses a 300×150 default box.
 - **Picture-shaped boards need their outline drawn.** With only empty cells marked, a tree-shaped board looked like random pieces.
 
 ## 4. Rendering rules for Canvas in a WebView
@@ -47,6 +49,7 @@ On a weak GPU, JavaScript was under 3% of CPU time; the lag was all painting and
 - **Moving things are compositor transforms:** a dragged piece is its own small element moved with `translate3d`; screen shake and "pop" effects are CSS transforms. Never animate `width`, `top`, `left` or text content every frame. This holds for continuous motion too: up to five DOM tokens moved by `transform` every frame, plus pooled projectile elements animated with the Web Animations API, ran at 59.8–60 fps on the weak phone with four shooters firing at once.
 - **Never read layout inside a frame loop or a pointer-move handler** (`getBoundingClientRect`, `innerWidth`, `offsetWidth`). Read once per layout, or once per gesture, and cache. One confetti loop caused about 70 forced layouts per frame.
 - **No full-screen animated canvases, no `shadowBlur` per frame.** Bake shadows and text into sprites once. A full-screen confetti canvas re-rasterised the whole page every frame.
+- **A DOM board is fine on a weak phone if it is built once and patched.** Rebuilding every cell's HTML on each move, with SVG `<img>` items, cost 46 fps in a burst of moves: every new SVG image is decoded and rasterised again, and again at each new scale. Update only the cells that changed, and rasterise SVG art to PNG once at start-up (58.7 fps, worst frame 33 ms).
 - **Don't create dozens of animated DOM elements at once** (36 animated confetti divs cost 110–180 ms in one frame: one GPU layer each).
 - **Watch for size changes the window doesn't announce** (an ad banner loading) with a `ResizeObserver` on the play area. Missing this squashed the board and made drops land in the wrong place for three versions.
 - **Cap devicePixelRatio at 2.**
@@ -59,6 +62,7 @@ On a weak GPU, JavaScript was under 3% of CPU time; the lag was all painting and
 - **Desktop Chrome is not evidence.** Attach to the game's WebView on the phone over USB: `adb forward tcp:9223 localabstract:webview_devtools_remote_<pid>`, then Playwright `chromium.connectOverCDP('http://localhost:9223')`. A small script can then evaluate JS in the page, sample `requestAnimationFrame` intervals (fps, % of frames over 20 ms, worst frame) while an action runs, and take screenshots (`adb exec-out screencap -p`). See `tools/device.mjs` in this repo.
 - **Add a debug hook (`window.__dbg`) that triggers each effect on demand** (a line clear, a win, confetti, a hint) so each can be measured alone. Strip it from release builds with a script that fails loudly if it can't find it.
 - **Change one variable per measurement.** One early test board was empty, so every "line clear" was really a "board clear with confetti", and the numbers pointed the wrong way. Set up the state *before* the sampling window starts: starting a level inside it made level generation look like a 399 ms animation stall.
+- **Measure the worst frame per kind of event** (plain move, pop, pop that brings in a new layer), not only per burst. It points at the guilty event at once.
 - **Find causes with traces, not guesses:** switch features off one at a time on the device, and use the Chrome `Tracing` domain to count forced layouts and paints.
 - **Test with the real ad banner loaded** once ads exist. Desktop tests have no banner.
 - **`adb screencap` lags about a second.** To see something fast-moving, capture in parallel with the action, and query the DOM before concluding that something doesn't render.
@@ -91,8 +95,9 @@ On a weak GPU, JavaScript was under 3% of CPU time; the lag was all painting and
 - **Ship in slices, each checked on the phone for function and frame rate:** game feel first, then progression (journey/levels), then a daily puzzle, then everything else. One version added seven retention systems at once (four of them "come back daily"), which was too much for a new player to parse.
 - **Design the reward loop before ads exist** (what hints cost, how they're earned) so rewarded ads plug in later without changing the rules. Close farming loopholes (restarting a level must not re-earn rewards).
 - **Offer an alternative to the hard gesture** (tap first and last letter as well as swiping; tap to select as well as drag). Many players, especially older ones, struggle with precise swipes.
-- **"The solver wins" proves a level is fair, not that it is a puzzle.** Also measure how often a *random* player wins, and tune difficulty on that number. One game passed every solvability test while a random player won 99% of levels.
+- **"The solver wins" proves a level is fair, not that it is a puzzle.** Also measure how often a *random* player wins, and tune difficulty on that number. One game passed every solvability test while a random player won 99% of levels. In sort games, where random moves never build a match, a purely random player wins nothing at all; measure with a *careless* player instead (half greedy moves, half random).
 - **Find the structural cause before sweeping knobs.** Sweeping ammo, capacity and shuffle barely moved that 99%. The cause was the content: every colour touched the picture's edge, so any move was useful. Fixing the content (full-square pictures with a background colour) made one knob work.
+- **Before writing a "never stuck" rescue, prove exactly when a position is dead.** In the sort game, "no free slots" was not the whole rule: with one or two free slots and no type three times up front, nothing could ever pop. With the exact rule the rescue was a few lines and always possible. Give the greedy solver cycle protection too (a repeated state counts as stuck), so the test always ends.
 - **Never let a player get permanently stuck** (a shuffle that always succeeds, a guaranteed-solvable deal).
 - **Get real players early.** Difficulty and economy tuned by judgement alone are guesses; a few closed-test players are worth more than more polish.
 

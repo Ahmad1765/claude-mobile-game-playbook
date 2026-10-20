@@ -9,3 +9,4 @@ The development logs the rules in `../skills/mobile-game-dev/SKILL.md` were draw
 | [3-word-search-word-passport.md](3-word-search-word-passport.md) | Word search | Reuse-first build, content validation, large-text bugs, process traps |
 | [4-arrow-puzzle-arrow-garden.md](4-arrow-puzzle-arrow-garden.md) | Arrow tap-away puzzle | Solvable-by-construction generator, name collisions, confounded fps measurement |
 | [5-color-shooter-mosaic-parade.md](5-color-shooter-mosaic-parade.md) | Conveyor colour shooter | A shared simulation for game, solver and tests; balancing with a random player; DOM tokens at 60 fps |
+| [6-goods-sort-shopkeeper-trio.md](6-goods-sort-shopkeeper-trio.md) | Goods triple-sort | Proving the never-stuck rule; a DOM board patched per cell; SVG images vs PNG on a weak GPU |
