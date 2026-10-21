@@ -135,6 +135,9 @@ On a weak GPU, JavaScript was under 3% of CPU time; the lag was all painting and
 - **Test a growth game's size ladder**: food at once for a new player, something at every size, and the biggest thing reachable.
 - **Tie every animation loop to its round**, and check measurements don't drift from round to round (a duplicate loop skews them all).
 - **Render flat art at CSS pixels on low-end GPUs** when a full-screen canvas at 2x is the cost.
+- **Simulate an idle economy with a decent player before any visuals**, and treat a stuck simulated player as a design bug (full hands with nowhere to put things; auto-pickups you did not want).
+- **Draw a paused scene once**, not every frame under the modal.
+- **Check a device test's own inputs before blaming the game**: adb ignores a swipe with a fractional duration; a game's autosave can overwrite a test's setup.
 - **Plan for content updates after launch.** If puzzles are derived from content lists by shuffling, adding items reshuffles every existing puzzle. Use an order that stays stable when items are appended, and guard saved in-progress state against content that has changed under it.
 
 ## 7. Test like a player, on the device, after every change
