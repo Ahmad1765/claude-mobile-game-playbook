@@ -122,6 +122,10 @@ On a weak GPU, JavaScript was under 3% of CPU time; the lag was all painting and
 - **Store calendar days with the device's local date**, not `toISOString()` (UTC gives yesterday in the small hours).
 - **Render heavy vector art once at build time** into small PNGs instead of shipping it.
 - **Check every claim in the store listing against the code** before writing it.
+- **Look for a closed form before adding a physics engine**: if bodies only come to rest in a few ways, make the poses a table that the game, solver and tests share, and animate the motion instead of simulating it.
+- **Reject knife-edge levels at generation** (geometry within a margin of changing an outcome), and check a little inside the test's limits so rounding stored numbers can't cross them.
+- **Draw small canvases onto a board as `ImageBitmap`s** (`createImageBitmap`), or the GPU may receive them again every frame.
+- **Ignore the first frame of any FPS window started over DevTools**: it is long whatever the page does. Use an idle lead-in.
 - **Plan for content updates after launch.** If puzzles are derived from content lists by shuffling, adding items reshuffles every existing puzzle. Use an order that stays stable when items are appended, and guard saved in-progress state against content that has changed under it.
 
 ## 7. Test like a player, on the device, after every change
