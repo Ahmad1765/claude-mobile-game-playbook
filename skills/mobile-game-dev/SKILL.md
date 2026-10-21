@@ -126,6 +126,10 @@ On a weak GPU, JavaScript was under 3% of CPU time; the lag was all painting and
 - **Reject knife-edge levels at generation** (geometry within a margin of changing an outcome), and check a little inside the test's limits so rounding stored numbers can't cross them.
 - **Draw small canvases onto a board as `ImageBitmap`s** (`createImageBitmap`), or the GPU may receive them again every frame.
 - **Ignore the first frame of any FPS window started over DevTools**: it is long whatever the page does. Use an idle lead-in.
+- **Online for a turn-based game: one phone referees.** The host runs the rules and rolls every die; the others only send requests the host checks, and draw what it sends. Supabase Realtime broadcast + presence works with no tables or accounts.
+- **Treat every message from another phone as outside input**: rebuild received state field by field, and test with an outsider sending garbage and forgeries.
+- **Ask the owner before adding a server**, naming what changes: account and cost, privacy policy, Data safety form, the "offline" claim.
+- **Clamp animation elapsed time at zero**: a `requestAnimationFrame` timestamp can precede a `performance.now()` read taken just before.
 - **Plan for content updates after launch.** If puzzles are derived from content lists by shuffling, adding items reshuffles every existing puzzle. Use an order that stays stable when items are appended, and guard saved in-progress state against content that has changed under it.
 
 ## 7. Test like a player, on the device, after every change
