@@ -127,6 +127,7 @@ On a weak GPU, JavaScript was under 3% of CPU time; the lag was all painting and
 - **Draw small canvases onto a board as `ImageBitmap`s** (`createImageBitmap`), or the GPU may receive them again every frame.
 - **Ignore the first frame of any FPS window started over DevTools**: it is long whatever the page does. Use an idle lead-in.
 - **Online for a turn-based game: one phone referees.** The host runs the rules and rolls every die; the others only send requests the host checks, and draw what it sends. Supabase Realtime broadcast + presence works with no tables or accounts.
+- **Assume a broadcast can be missed**: send whole states, re-send every few seconds, and keep the receiving queue alive past a failing step.
 - **Treat every message from another phone as outside input**: rebuild received state field by field, and test with an outsider sending garbage and forgeries.
 - **Ask the owner before adding a server**, naming what changes: account and cost, privacy policy, Data safety form, the "offline" claim.
 - **Clamp animation elapsed time at zero**: a `requestAnimationFrame` timestamp can precede a `performance.now()` read taken just before.

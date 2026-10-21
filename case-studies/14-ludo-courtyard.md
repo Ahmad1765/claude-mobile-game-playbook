@@ -38,11 +38,12 @@ Spec: `games/13-ludo-royale.md` (Ludo). A fresh project (root DEVLOG §5.19), ev
 | P22, four computer players at normal speed, 20 s | 60 fps, no frame over 20 ms; with a board full of tokens, one 33 ms frame |
 | Device regression (`node tools/regress.mjs`) | 8/8 in five runs in a row, then 9/9 (with teams) in four more: a new game by real taps (Start, the die) and the roll in the ledger; a real tap picks the token; capture and extra roll; the coach; named rules typed on the real keyboard (quick start); resume with the die kept; win and story; ledger and back; teams of two |
 | Online, desktop host + desktop guest (`node tools/online-test.mjs 30`) | the guest joined by a lower-case code; 30 rolls, both boards identical, the guest's ledger counted all 30; garbage, a forged state and forged requests from an outsider changed nothing; a guest who left was replaced by the computer |
-| Online, the phone hosting + a desktop guest (`node tools/online-device.mjs 30`) | joined in 2.4 s; 27 rolls, both boards identical; when the host left, the guest returned home |
+| Online, the phone hosting + a desktop guest (`node tools/online-device.mjs 25`) | joined in 2.4-3.7 s; a teams game with two computer players. **Before the fix below, 4 of 15 runs ended with the guest one roll behind** (every send had reported ok; one more run lost the DevTools connection). **After it, 4 of 4 agreed** (the test now also waits up to 12 s for the boards to agree). When the host left, the guest returned home |
 | 1.3× text | every screen fits |
 | A full game, four computer players, Classic rules, quick bots (on the phone) | 443 rolls, 26 captures; its real story and ledger are in the store screenshots |
 
 ## Bugs found and how
+- **A guest could miss a message and stay one roll behind** (4 of 15 phone runs). The host's sends all reported ok, so the likeliest cause is a lost broadcast (Realtime broadcast does not promise delivery); not proven. The host now re-sends the whole state every 3 s, and a step that fails on a guest no longer blocks the messages after it (a rejected promise chain would have dropped them all silently). 4 of 4 runs agreed after.
 - **The game froze for good** after a move: a frame's timestamp can come before the `performance.now()` read when the hop starts, the time went negative, the path index became −1 and the error killed the animation loop. Found by a 40 s automatic game in the desktop preview (stack traces added to the preview tool). Clamped at zero.
 - **The ledger cut its own heading** to "All the dice tog": headings went through the 16-character name cleaner. Headings are now escaped, not shortened. Found by the regression.
 - **"1 rolls"** (ledger and win line): pluralised.
