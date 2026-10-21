@@ -118,6 +118,10 @@ On a weak GPU, JavaScript was under 3% of CPU time; the lag was all painting and
 - **Generators that are solvable by construction need a proven invariant** (bound the worst case of finishing what is open, not just the current load); ship the construction order and replay it in the tests.
 - **Measure difficulty with a reasonable player**, not a random one: a player that never plans measures nothing on harder content.
 - **Never let a press-and-hold gesture swallow a slow tap** where the gesture doesn't apply.
+- **Take real-world facts from open data (for example Wikidata, CC0), never from memory**: query by name and type, prefer the preferred-rank value, leave out values that change, and show only the data and arithmetic on it.
+- **Store calendar days with the device's local date**, not `toISOString()` (UTC gives yesterday in the small hours).
+- **Render heavy vector art once at build time** into small PNGs instead of shipping it.
+- **Check every claim in the store listing against the code** before writing it.
 - **Plan for content updates after launch.** If puzzles are derived from content lists by shuffling, adding items reshuffles every existing puzzle. Use an order that stays stable when items are appended, and guard saved in-progress state against content that has changed under it.
 
 ## 7. Test like a player, on the device, after every change
