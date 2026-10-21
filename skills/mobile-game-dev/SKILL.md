@@ -131,6 +131,10 @@ On a weak GPU, JavaScript was under 3% of CPU time; the lag was all painting and
 - **Treat every message from another phone as outside input**: rebuild received state field by field, and test with an outsider sending garbage and forgeries.
 - **Ask the owner before adding a server**, naming what changes: account and cost, privacy policy, Data safety form, the "offline" claim.
 - **Clamp animation elapsed time at zero**: a `requestAnimationFrame` timestamp can precede a `performance.now()` read taken just before.
+- **Real places from OpenStreetMap**: one cached Overpass request per area, pauses, no retry loop, "© OpenStreetMap contributors" wherever the map shows; drop an area with poor coverage rather than invent it.
+- **Test a growth game's size ladder**: food at once for a new player, something at every size, and the biggest thing reachable.
+- **Tie every animation loop to its round**, and check measurements don't drift from round to round (a duplicate loop skews them all).
+- **Render flat art at CSS pixels on low-end GPUs** when a full-screen canvas at 2x is the cost.
 - **Plan for content updates after launch.** If puzzles are derived from content lists by shuffling, adding items reshuffles every existing puzzle. Use an order that stays stable when items are appended, and guard saved in-progress state against content that has changed under it.
 
 ## 7. Test like a player, on the device, after every change
